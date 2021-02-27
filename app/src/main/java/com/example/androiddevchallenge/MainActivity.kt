@@ -19,16 +19,21 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
 class MainActivity : AppCompatActivity() {
-
     private val viewModel: PuppyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +46,44 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
 @Composable
 fun MyApp(puppies: List<Puppy>) {
-    Surface(color = MaterialTheme.colors.background) {
-        LazyColumn {
-            items(puppies) { puppy ->
-                PuppyCard(puppy)
+    var isViewGrid by remember { mutableStateOf(true) }
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text(text = "Pup adopt") },
+            actions = { TopBarActions(isViewGrid) { isViewGrid = it } }
+        )
+    }) {
+        Surface(color = MaterialTheme.colors.background) {
+            if (isViewGrid) {
+                PuppyList(puppies)
+            } else {
+                PuppyPhotoGrid(puppies)
             }
         }
     }
 }
 
+@ExperimentalAnimationApi
+@Composable
+fun TopBarActions(isViewGrid: Boolean, onToggleGridView: (Boolean) -> Unit) {
+    val currentIcon = remember { MutableTransitionState(Icons.Default.ViewList) }
+    currentIcon.targetState = if (isViewGrid) Icons.Default.GridView else Icons.Default.ViewList
+    val transition = updateTransition(targetState = currentIcon)
+
+    IconButton(onClick = { onToggleGridView(!isViewGrid) }) {
+        Icon(
+            imageVector = transition.targetState.targetState,
+            contentDescription = "Toggle Views"
+        )
+    }
+}
+
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun LightPreview() {
@@ -60,6 +92,8 @@ fun LightPreview() {
     }
 }
 
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
 @Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun DarkPreview() {
