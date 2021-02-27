@@ -24,15 +24,24 @@ import com.example.androiddevchallenge.Puppy
 import com.example.androiddevchallenge.R
 
 @Composable
-fun PuppyFullDetails(puppy: Puppy) {
-    Column {
-        PuppyPhoto(puppy = puppy, modifier = Modifier.fillMaxWidth())
-        PetShortDetails(puppy = puppy)
+fun PuppyFullDetails(puppy: Puppy?) {
+    puppy?.let {
+        Column {
+            PuppyPhoto(puppy = it, modifier = Modifier.fillMaxWidth())
+            PetShortDetails(puppy = it)
+        }
     }
 }
 
 @Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun PuppyPreview() {
-    PuppyFullDetails(puppy = Puppy("Name", "Age", "Breed", R.drawable.img_pet_benji))
+    PuppyFullDetails(
+        puppy = Puppy(
+            name = "Name",
+            age = "Age",
+            breed = "Breed",
+            imageResourceId = R.drawable.img_pet_benji
+        )
+    )
 }

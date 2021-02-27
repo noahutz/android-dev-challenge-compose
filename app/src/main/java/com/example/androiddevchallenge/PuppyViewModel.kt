@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModel
 class PuppyViewModel : ViewModel() {
     var viewList by mutableStateOf(true)
     val puppies by mutableStateOf(getPuppyList())
-    var puppySelected: Puppy? by mutableStateOf(null)
 
     private fun getPuppyList(): List<Puppy> {
         return listOf(

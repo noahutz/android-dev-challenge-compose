@@ -16,7 +16,6 @@
 package com.example.androiddevchallenge
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,18 +25,17 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.components.PuppyFullDetails
 import com.example.androiddevchallenge.components.PuppyList
 import com.example.androiddevchallenge.components.PuppyPhotoGrid
@@ -51,18 +49,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val context = LocalContext.current
             MyTheme {
                 MyApp(
                     puppies = viewModel.puppies,
                     viewList = viewModel.viewList,
-                    selectedPuppy = viewModel.puppySelected,
                     onToggleGridView = { viewModel.viewList = it }
-                ) { selectedPuppy ->
-                    viewModel.puppySelected = selectedPuppy
-                    Toast.makeText(context, "Selected: ${selectedPuppy?.name}", Toast.LENGTH_LONG)
-                        .show()
-                }
+                )
             }
         }
     }
@@ -74,32 +66,53 @@ class MainActivity : AppCompatActivity() {
 fun MyApp(
     puppies: List<Puppy>,
     viewList: Boolean,
-    selectedPuppy: Puppy? = null,
-    onToggleGridView: (Boolean) -> Unit,
-    onItemSelected: (Puppy?) -> Unit
+    onToggleGridView: (Boolean) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Pup Adopt") },
-                actions = { TopBarActions(viewList) { onToggleGridView(it) } }
-            )
-        }
-    ) {
-        Surface(color = MaterialTheme.colors.background) {
-            selectedPuppy?.let {
-                PuppyFullDetails(puppy = it)
-            } ?: if (viewList) {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = "puppyList") {
+        composable("puppyList") {
+            if (viewList) {
                 PuppyList(puppies) { selectedPuppy ->
-                    onItemSelected(selectedPuppy)
+                    navController.navigate("puppyDetails/${selectedPuppy.id}")
                 }
             } else {
                 PuppyPhotoGrid(puppies) { selectedPuppy ->
-                    onItemSelected(selectedPuppy)
+                    navController.navigate("puppyDetails/${selectedPuppy.id}")
                 }
             }
         }
+        composable(
+            route = "puppyDetails/{puppyId}",
+            arguments = listOf(navArgument("puppyId") {})
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getString("puppyId")?.let { puppyId ->
+                PuppyFullDetails(puppy = puppies.first { it.id == puppyId })
+            }
+        }
     }
+
+//    Scaffold(
+//        topBar = {
+//            TopAppBar(
+//                title = { Text(text = "Pup Adopt") },
+//                actions = { TopBarActions(viewList) { onToggleGridView(it) } }
+//            )
+//        }
+//    ) {
+//        Surface(color = MaterialTheme.colors.background) {
+//            selectedPuppy?.let {
+//                PuppyFullDetails(puppy = it)
+//            } ?: if (viewList) {
+//                PuppyList(puppies) { selectedPuppy ->
+//                    onItemSelected(selectedPuppy)
+//                }
+//            } else {
+//                PuppyPhotoGrid(puppies) { selectedPuppy ->
+//                    onItemSelected(selectedPuppy)
+//                }
+//            }
+//        }
+//    }
 }
 
 @ExperimentalAnimationApi
@@ -124,7 +137,7 @@ fun TopBarActions(isViewGrid: Boolean, onToggleGridView: (Boolean) -> Unit) {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp(getPreviewList(), true, onToggleGridView = {}) {}
+        MyApp(getPreviewList(), true, onToggleGridView = {})
     }
 }
 
@@ -134,7 +147,7 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp(getPreviewList(), true, onToggleGridView = {}) {}
+        MyApp(getPreviewList(), true, onToggleGridView = {})
     }
 }
 
