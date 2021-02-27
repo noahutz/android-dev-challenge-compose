@@ -19,18 +19,12 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -48,31 +42,11 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun MyApp(puppies: List<Puppy>?) {
+fun MyApp(puppies: List<Puppy>) {
     Surface(color = MaterialTheme.colors.background) {
         LazyColumn {
-            puppies?.forEach { puppy ->
-                item {
-                    Card(
-                        Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth(),
-                        elevation = 4.dp
-                    ) {
-                        Row(modifier = Modifier.padding(8.dp)) {
-                            Image(
-                                painter = painterResource(id = puppy.imageResourceId),
-                                contentDescription = puppy.name,
-                                modifier = Modifier.size(128.dp)
-                            )
-                            Column(modifier = Modifier.padding(start = 8.dp)) {
-                                Text(text = "Name: ${puppy.name}")
-                                Text(text = "Age: ${puppy.age}")
-                                Text(text = "Breed: ${puppy.breed}")
-                            }
-                        }
-                    }
-                }
+            items(puppies) { puppy ->
+                PuppyCard(puppy)
             }
         }
     }
