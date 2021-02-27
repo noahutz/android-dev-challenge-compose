@@ -23,11 +23,21 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.ViewList
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androiddevchallenge.components.PuppyList
 import com.example.androiddevchallenge.components.PuppyPhotoGrid
@@ -53,12 +63,14 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp(puppies: List<Puppy>) {
     var isViewGrid by remember { mutableStateOf(true) }
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text(text = "Pup Adopt") },
-            actions = { TopBarActions(isViewGrid) { isViewGrid = it } }
-        )
-    }) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Pup Adopt") },
+                actions = { TopBarActions(isViewGrid) { isViewGrid = it } }
+            )
+        }
+    ) {
         Surface(color = MaterialTheme.colors.background) {
             if (isViewGrid) {
                 PuppyList(puppies)
