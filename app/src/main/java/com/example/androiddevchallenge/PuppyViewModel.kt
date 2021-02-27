@@ -34,7 +34,7 @@ class PuppyViewModel : ViewModel() {
             Puppy(
                 name = "Benji",
                 age = "4 months",
-                breed = "Cocker Spaniel/Schnauzer/Poodle",
+                breed = "Cocker Spaniel (mix)",
                 imageResourceId = R.drawable.img_benji,
                 details = "Benji is the main protagonist of the Benji franchise. He has had a dozen movies, a Saturday morning TV series, two documentaries on his celebrated life, and even a sci-fi video game for the Commodore 64."
             ),
@@ -72,6 +72,41 @@ class PuppyViewModel : ViewModel() {
                 breed = "Dachshund",
                 imageResourceId = R.drawable.img_slinky,
                 details = "Slinky Dog (better known as Slinky or by his nickname Slink) is a supporting character in the Disney•Pixar Toy Story franchise. He is a wooden toy dachshund who speaks with a graveled Southern accent. He is extremely loyal to Woody and is often the first to side with him."
+            ),
+            Puppy(
+                name = "Unnamed Dog",
+                age = "2 years",
+                breed = "Pitbull",
+                imageResourceId = R.drawable.img_pit_bull,
+                details = "The dog does not have a given name. This is perhaps because John doesn't want to become emotionally attached as he did with Daisy. Despite this, they seem to have a good relationship as the dog is seen following him and licking his face repeatedly in John Wick- Parabellum."
+            ),
+            Puppy(
+                name = "Rin Tin Tin",
+                age = "6 years",
+                breed = "German Shepherd",
+                imageResourceId = R.drawable.img_rin_tin_tin,
+                details = "Rin Tin Tin (sometimes punctuated with hyphens) was a canine movie star beginning in the silent era. The heroic German Shepherd, much like the later Lassie, spent most of his screen time battling villains and performing rescues and received star billing on posters."
+            ),
+            Puppy(
+                name = "Snoopy",
+                age = "8 years",
+                breed = "Beagle",
+                imageResourceId = R.drawable.img_snoopy,
+                details = "Snoopy is a major character in the Peanuts comic strip by Charles M. Schulz. He is the pet beagle of Charlie Brown (his best friend) who cares for him. Snoopy is blessed with a rich, Walter Mitty-like fantasy life."
+            ),
+            Puppy(
+                name = "Sandy",
+                age = "4 years",
+                breed = "Beige Terrier (mix)",
+                imageResourceId = R.drawable.img_sandy,
+                details = "Sandy first appeared in January 1925 as a small puppy whom Annie rescued from a group of boys behind Mrs. Bottle's store. She is depicted to have a black left ear, a black patch on her back and a white tip on her tail. Annie named her Sandy."
+            ),
+            Puppy(
+                name = "Scooby-Doo",
+                age = "4 years",
+                breed = "Great Dane",
+                imageResourceId = R.drawable.img_scooby,
+                details = "Scooby is brown from head to toe with several distinctive black spots on his upper body. He is generally a quadruped, but displays bipedal 'human' characteristics occasionally. Scooby also has opposible thumbs and can use his front paws like hands."
             )
         )
     }
