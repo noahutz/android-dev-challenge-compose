@@ -16,6 +16,7 @@
 package com.example.androiddevchallenge.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,23 +35,24 @@ import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.Puppy
 
 @Composable
-fun PuppyList(puppies: List<Puppy>) {
+fun PuppyList(puppies: List<Puppy>, onItemSelected: (Puppy) -> Unit) {
     LazyColumn {
         items(puppies) { puppy ->
-            PuppyCard(puppy)
+            PuppyCard(puppy = puppy, modifier = Modifier.clickable { onItemSelected(puppy) })
         }
     }
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun PuppyPhotoGrid(puppies: List<Puppy>) {
+fun PuppyPhotoGrid(puppies: List<Puppy>, onItemSelected: (Puppy) -> Unit) {
     Card(modifier = Modifier.fillMaxSize()) {
         LazyVerticalGrid(cells = GridCells.Fixed(3)) {
             items(puppies) { puppy ->
                 PuppyPhoto(
                     puppy = puppy,
                     modifier = Modifier
+                        .clickable { onItemSelected(puppy) }
                         .size(128.dp)
                         .padding(2.dp)
                 )
@@ -60,9 +62,9 @@ fun PuppyPhotoGrid(puppies: List<Puppy>) {
 }
 
 @Composable
-private fun PuppyCard(puppy: Puppy) {
+private fun PuppyCard(puppy: Puppy, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(4.dp)
             .fillMaxWidth(),
         elevation = 4.dp

@@ -16,6 +16,7 @@
 package com.example.androiddevchallenge
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -34,11 +35,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.androiddevchallenge.components.PuppyFullDetails
 import com.example.androiddevchallenge.components.PuppyList
 import com.example.androiddevchallenge.components.PuppyPhotoGrid
 import com.example.androiddevchallenge.ui.theme.MyTheme
@@ -51,8 +51,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val context = LocalContext.current
             MyTheme {
-                MyApp(viewModel.puppies)
+                MyApp(
+                    puppies = viewModel.puppies,
+                    viewList = viewModel.viewList,
+                    selectedPuppy = viewModel.puppySelected,
+                    onToggleGridView = { viewModel.viewList = it }
+                ) { selectedPuppy ->
+                    viewModel.puppySelected = selectedPuppy
+                    Toast.makeText(context, "Selected: ${selectedPuppy?.name}", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         }
     }
@@ -61,21 +71,32 @@ class MainActivity : AppCompatActivity() {
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
-fun MyApp(puppies: List<Puppy>) {
-    var isViewGrid by remember { mutableStateOf(true) }
+fun MyApp(
+    puppies: List<Puppy>,
+    viewList: Boolean,
+    selectedPuppy: Puppy? = null,
+    onToggleGridView: (Boolean) -> Unit,
+    onItemSelected: (Puppy?) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Pup Adopt") },
-                actions = { TopBarActions(isViewGrid) { isViewGrid = it } }
+                actions = { TopBarActions(viewList) { onToggleGridView(it) } }
             )
         }
     ) {
         Surface(color = MaterialTheme.colors.background) {
-            if (isViewGrid) {
-                PuppyList(puppies)
+            selectedPuppy?.let {
+                PuppyFullDetails(puppy = it)
+            } ?: if (viewList) {
+                PuppyList(puppies) { selectedPuppy ->
+                    onItemSelected(selectedPuppy)
+                }
             } else {
-                PuppyPhotoGrid(puppies)
+                PuppyPhotoGrid(puppies) { selectedPuppy ->
+                    onItemSelected(selectedPuppy)
+                }
             }
         }
     }
@@ -84,8 +105,9 @@ fun MyApp(puppies: List<Puppy>) {
 @ExperimentalAnimationApi
 @Composable
 fun TopBarActions(isViewGrid: Boolean, onToggleGridView: (Boolean) -> Unit) {
-    val currentIcon = remember { MutableTransitionState(Icons.Default.ViewList) }
-    currentIcon.targetState = if (isViewGrid) Icons.Default.GridView else Icons.Default.ViewList
+    val currentIcon = remember { MutableTransitionState(Icons.Default.ViewList) }.apply {
+        targetState = if (isViewGrid) Icons.Default.GridView else Icons.Default.ViewList
+    }
     val transition = updateTransition(targetState = currentIcon)
 
     IconButton(onClick = { onToggleGridView(!isViewGrid) }) {
@@ -102,7 +124,7 @@ fun TopBarActions(isViewGrid: Boolean, onToggleGridView: (Boolean) -> Unit) {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp(getPreviewList())
+        MyApp(getPreviewList(), true, onToggleGridView = {}) {}
     }
 }
 
@@ -112,7 +134,7 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp(getPreviewList())
+        MyApp(getPreviewList(), true, onToggleGridView = {}) {}
     }
 }
 

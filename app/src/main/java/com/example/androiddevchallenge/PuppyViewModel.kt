@@ -17,11 +17,13 @@ package com.example.androiddevchallenge
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class PuppyViewModel : ViewModel() {
-
+    var viewList by mutableStateOf(true)
     val puppies by mutableStateOf(getPuppyList())
+    var puppySelected: Puppy? by mutableStateOf(null)
 
     private fun getPuppyList(): List<Puppy> {
         return listOf(
