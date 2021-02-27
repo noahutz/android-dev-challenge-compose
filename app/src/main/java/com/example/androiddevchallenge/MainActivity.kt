@@ -29,6 +29,8 @@ import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.androiddevchallenge.components.PuppyList
+import com.example.androiddevchallenge.components.PuppyPhotoGrid
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 @ExperimentalAnimationApi

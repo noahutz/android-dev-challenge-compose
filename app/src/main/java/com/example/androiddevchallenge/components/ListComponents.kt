@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge
+package com.example.androiddevchallenge.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,8 +25,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androiddevchallenge.Puppy
 
 @Composable
 fun PuppyList(puppies: List<Puppy>) {
@@ -50,7 +50,7 @@ fun PuppyPhotoGrid(puppies: List<Puppy>) {
 }
 
 @Composable
-fun PuppyCard(puppy: Puppy) {
+private fun PuppyCard(puppy: Puppy) {
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -65,7 +65,7 @@ fun PuppyCard(puppy: Puppy) {
 }
 
 @Composable
-fun PuppyPhoto(puppy: Puppy, modifier: Modifier = Modifier, shape: Shape = RectangleShape) {
+private fun PuppyPhoto(puppy: Puppy, modifier: Modifier = Modifier, shape: Shape = RectangleShape) {
     Surface(modifier = modifier.size(128.dp), shape = shape) {
         Image(
             painter = painterResource(id = puppy.imageResourceId),
@@ -75,7 +75,7 @@ fun PuppyPhoto(puppy: Puppy, modifier: Modifier = Modifier, shape: Shape = Recta
 }
 
 @Composable
-fun PetShortDetails(puppy: Puppy, modifier: Modifier = Modifier) {
+private fun PetShortDetails(puppy: Puppy, modifier: Modifier = Modifier) {
     val color = MaterialTheme.colors.secondaryVariant
     val age = remember { buildDetailAnnotation("Age", puppy.age, color = color) }
     val breed = remember { buildDetailAnnotation("Breed", puppy.breed, color = color) }
@@ -101,11 +101,4 @@ private fun buildDetailAnnotation(title: String, value: String, color: Color): A
         append(value)
         pop()
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PuppyCardPreview() {
-    PuppyCard(puppy = Puppy("Bingo", "12", "breed", R.drawable.img_pet_benji))
 }
