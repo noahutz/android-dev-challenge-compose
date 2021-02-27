@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class PuppyViewModel : ViewModel() {
-    var viewList by mutableStateOf(true)
     val puppies by mutableStateOf(getPuppyList())
 
     private fun getPuppyList(): List<Puppy> {

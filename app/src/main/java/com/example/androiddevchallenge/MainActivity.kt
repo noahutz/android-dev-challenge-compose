@@ -35,7 +35,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import androidx.navigation.compose.rememberNavController
+import com.example.androiddevchallenge.components.AppScaffold
 import com.example.androiddevchallenge.components.PuppyFullDetails
 import com.example.androiddevchallenge.components.PuppyList
 import com.example.androiddevchallenge.components.PuppyPhotoGrid
@@ -50,11 +52,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp(
-                    puppies = viewModel.puppies,
-                    viewList = viewModel.viewList,
-                    onToggleGridView = { viewModel.viewList = it }
-                )
+                MyApp(puppies = viewModel.puppies)
             }
         }
     }
@@ -63,19 +61,36 @@ class MainActivity : AppCompatActivity() {
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
-fun MyApp(
-    puppies: List<Puppy>,
-    viewList: Boolean,
-    onToggleGridView: (Boolean) -> Unit
-) {
+fun MyApp(puppies: List<Puppy>) {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "puppyList") {
         composable("puppyList") {
-            if (viewList) {
+            AppScaffold(
+                title = "Pup adopt",
+                actions = {
+                    TopBarActions(true) {
+                        navController.navigate("puppyGrid") {
+                            popUpTo("puppyList") { inclusive = true }
+                        }
+                    }
+                }
+            ) {
                 PuppyList(puppies) { selectedPuppy ->
                     navController.navigate("puppyDetails/${selectedPuppy.id}")
                 }
-            } else {
+            }
+        }
+        composable("puppyGrid") {
+            AppScaffold(
+                "Pup adopt",
+                actions = {
+                    TopBarActions(false) {
+                        navController.navigate("puppyList") {
+                            popUpTo("puppyGrid") { inclusive = true }
+                        }
+                    }
+                }
+            ) {
                 PuppyPhotoGrid(puppies) { selectedPuppy ->
                     navController.navigate("puppyDetails/${selectedPuppy.id}")
                 }
@@ -86,44 +101,24 @@ fun MyApp(
             arguments = listOf(navArgument("puppyId") {})
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("puppyId")?.let { puppyId ->
-                PuppyFullDetails(puppy = puppies.first { it.id == puppyId })
+                val puppy = puppies.first { it.id == puppyId }
+                AppScaffold(puppy.name) {
+                    PuppyFullDetails(puppy = puppy)
+                }
             }
         }
     }
-
-//    Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                title = { Text(text = "Pup Adopt") },
-//                actions = { TopBarActions(viewList) { onToggleGridView(it) } }
-//            )
-//        }
-//    ) {
-//        Surface(color = MaterialTheme.colors.background) {
-//            selectedPuppy?.let {
-//                PuppyFullDetails(puppy = it)
-//            } ?: if (viewList) {
-//                PuppyList(puppies) { selectedPuppy ->
-//                    onItemSelected(selectedPuppy)
-//                }
-//            } else {
-//                PuppyPhotoGrid(puppies) { selectedPuppy ->
-//                    onItemSelected(selectedPuppy)
-//                }
-//            }
-//        }
-//    }
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun TopBarActions(isViewGrid: Boolean, onToggleGridView: (Boolean) -> Unit) {
+private fun TopBarActions(isViewList: Boolean, onClick: () -> Unit) {
     val currentIcon = remember { MutableTransitionState(Icons.Default.ViewList) }.apply {
-        targetState = if (isViewGrid) Icons.Default.GridView else Icons.Default.ViewList
+        targetState = if (isViewList) Icons.Default.GridView else Icons.Default.ViewList
     }
     val transition = updateTransition(targetState = currentIcon)
 
-    IconButton(onClick = { onToggleGridView(!isViewGrid) }) {
+    IconButton(onClick = onClick) {
         Icon(
             imageVector = transition.targetState.targetState,
             contentDescription = "Toggle Views"
@@ -137,7 +132,7 @@ fun TopBarActions(isViewGrid: Boolean, onToggleGridView: (Boolean) -> Unit) {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp(getPreviewList(), true, onToggleGridView = {})
+        MyApp(getPreviewList())
     }
 }
 
@@ -147,7 +142,7 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp(getPreviewList(), true, onToggleGridView = {})
+        MyApp(getPreviewList())
     }
 }
 
