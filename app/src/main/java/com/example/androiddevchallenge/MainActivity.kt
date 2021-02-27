@@ -55,7 +55,7 @@ fun MyApp(puppies: List<Puppy>) {
     var isViewGrid by remember { mutableStateOf(true) }
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text(text = "Pup adopt") },
+            title = { Text(text = "Pup Adopt") },
             actions = { TopBarActions(isViewGrid) { isViewGrid = it } }
         )
     }) {
