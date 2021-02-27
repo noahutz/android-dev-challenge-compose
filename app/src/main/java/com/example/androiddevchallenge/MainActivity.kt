@@ -152,13 +152,15 @@ private fun getPreviewList(): List<Puppy> {
             name = "Beethoven",
             age = "12 years",
             breed = "St. Bernard",
-            imageResourceId = R.drawable.img_pet_beethoven
+            imageResourceId = R.drawable.img_beethoven,
+            details = "Details"
         ),
         Puppy(
             name = "Benji",
             age = "4 months",
             breed = "Cocker Spaniel/Schnauzer/Poodle",
-            imageResourceId = R.drawable.img_pet_benji
+            imageResourceId = R.drawable.img_benji,
+            details = "Details"
         )
     )
 }

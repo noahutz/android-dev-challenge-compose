@@ -27,6 +27,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -71,12 +72,16 @@ fun PuppyPhoto(puppy: Puppy, modifier: Modifier = Modifier, shape: Shape = Recta
 }
 
 @Composable
-fun PetShortDetails(puppy: Puppy, modifier: Modifier = Modifier) {
+fun PetShortDetails(
+    puppy: Puppy,
+    modifier: Modifier = Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start
+) {
     val color = MaterialTheme.colors.secondaryVariant
     val age = remember { buildDetailAnnotation("Age", puppy.age, color = color) }
     val breed = remember { buildDetailAnnotation("Breed", puppy.breed, color = color) }
 
-    Column(modifier = modifier.padding(8.dp)) {
+    Column(modifier = modifier.padding(8.dp), horizontalAlignment = horizontalAlignment) {
         Text(
             text = puppy.name,
             style = MaterialTheme.typography.h5,
